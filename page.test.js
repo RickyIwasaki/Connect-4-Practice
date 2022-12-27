@@ -1,141 +1,74 @@
-//assuming closeGame(), setGameD() works properly
-describe('resizeGame(), when window is resized', () => {
-    beforeAll((done) => {
-        isHidden = false;
-        isFading =
-        resizeGame();
-
-        setTimeout(done, 550);
+// assuming minimizeHead() and maximizeHead() works properly
+describe('resize(), when window dimensions changes', () => {
+    it('read script file to test', () => {
+        expect(true).toBe(true);
     });
-    it('should determine next function to call correctly', (done) => {
+    // // resize innerWidth to less than 763px to test
+    // it('should convert headMinimized to true', () => {
+    //     headMinimized = false;
+    //     resize();
+    //     // won't break on multiple calls
+    //     resize();
+    //     expect(headMinimized).toBe(true);
+    // });
+    // // resize innerWidth to other to test
+    // it('should convert headMinimized to false', () => {
+    //     headMinized = true;
+    //     resize();
+    //     expect(headMinimized).toBe(false);
+    // });
+});
 
-        if(innerWidth < 700 || innerHeight < 800){
-            //test this by decreasing window size
-            expect(isFading).toBe(false);
+// using maximizeHead() for testing
+describe('minimizeHead(), when innerWidth is less and headMinimized is false', () => {
+    beforeEach(() => {
+        maximizeHead();
+    });
 
-            resizeGame();
+    it('should display and undisplay head tags', () => {   
+        minimizeHead();
+        const head = document.querySelector('#head');
+        for(let i = 1; i < head.children.length - 1; i++){
+            expect(head.children[i].classList.contains('display-none')).toBe(true);
         }
-        else{
-            //test this by increasing window size
-            expect(isHidden).toBe(false);
-        }
-
-        setTimeout(done, 550);
-    });
-}); 
-
-//assuming fadeGame() works properly
-describe('closeGame(), when window is less than 700px in width or 800px in height', () => {
-    it('should call next function correctly', (done) => {
-        isHidden = false;
-        closeGame();
-
-        expect(isFading).toBe(true);
-
-        setTimeout(done, 550);
-    });
-    it('should do nothing correctly', () => {
-        isHidden = true;
-        isFading = false;
-        closeGame();
-
-        expect(isFading).toBe(false);
+        expect(head.children[head.children.length - 1].classList.contains('display-none')).toBe(false);
+        // won't break on multiple calls
+        minimizeHead();
     });
 
     afterEach(() => {
-        resizeGame();
-    });
-});
-
-describe('fadeGame(), if game is hidden or fading', () => {
-    beforeAll((done) => {
-        isFading = true;
-        fadeGame();
-
-        setTimeout(done, 550);
-    });
-
-    it('should decrease opacity close to 0, then hide game correctly', () => {
-        expect(isHidden).toBe(true);
-        expect(isFading).toBe(false);
-    });
-
-    afterAll(() => {
-        isHidden = false;
-        resizeGame();
-    });
-});
-
-//assuming board is made
-describe('setGameD(), when window size restrictions are passed', () => {
-    let answerGameWidth;
-    let answerGameHeight;
-    let answerTdSize;
-
-    let gameWidth;
-    let gameHeight;
-    let tdSize;
-
-    beforeAll(() => {
-        setGameD();
-
-        const game = document.querySelector('#game');
-        const boardTable = document.querySelector('#board');
-
-        gameWidth = game.style.width.replace('px', '');
-        gameHeight = game.style.height.replace('px', '');
-
-        tdSize = boardTable.children[1].children[0].style.width.replace('px', '');
-
-
-        const windowWidth = innerWidth;
-        const windowHeight = innerHeight;
-
-        const dRatio = 7 / 8;
-        const windowRatio = windowWidth / windowHeight;
-
-        if(dRatio < windowRatio){
-            answerGameWidth = (windowHeight * 7 / 8).toFixed(3) + '';
-            answerGameHeight = windowHeight + '';
-
-            answerTdSize = (windowHeight / 8).toFixed(3) - 5 + '';
+        if(innerWidth < 763){
+            minimizeHead();
         }
         else{
-            answerGameWidth = windowWidth + '';
-            answerGameHeight = (windowWidth * 8 / 7).toFixed(3) + '';
-
-            answerTdSize = (windowWidth / 7).toFixed(3) - 5 + '';
+            maximizeHead();
         }
-    });
-
-    it('should set game div`s width and height correctly', () => {
-        expect(answerGameWidth).toBe(gameWidth);
-        expect(answerGameHeight).toBe(gameHeight);
-    });
-    it('should set board`s size correctly', () => {
-        expect(answerTdSize).toBe(tdSize);
     });
 });
 
-describe('startGame(), when submit is clicked', () => {
-    const startScr = document.querySelector('#start-screen');
-    const board = document.querySelector('#board');
-    const gameFooter= document.querySelector('#game-footer');
+// using minimizeHead() for testing
+describe('maximizeHead(), when innerWidth is more and headMinimized is true', () => {
+    beforeEach(() => {
+        minimizeHead();
+    }); 
 
-    beforeAll(() => {
-        startGame();
+    it('should display and undisplay head tags', () => { 
+        maximizeHead();
+        const head = document.querySelector('#head');
+        for(let i = 1; i < head.children.length - 1; i++){
+            expect(head.children[i].classList.contains('display-none')).toBe(false);
+        }
+        expect(head.children[head.children.length - 1].classList.contains('display-none')).toBe(true);
+        // won't break on multiple calls
+        maximizeHead();
     });
 
-    it('should switch display screen', () => {
-        expect(startScr.style.display).toBe('none');
-        expect(board.style.display).toBe('block');
-        expect(gameFooter.style.display).toBe('block');
-        expect(playerTurn === 1 || playerTurn === 2).toBe(true);
-    });
-
-    afterAll(() => {
-        startScr.style.display = 'block';
-        board.style.display = 'none';
-        gameFooter.style.display = 'none';
+    afterEach(() => {
+        if(innerWidth < 763){
+            minimizeHead();
+        }
+        else{
+            maximizeHead();
+        }
     });
 });

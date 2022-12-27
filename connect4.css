@@ -1,4 +1,4 @@
-#game-msg{
+/* #game-msg{
   width: 100%;
   height: 100%;
   position:absolute;
@@ -48,7 +48,7 @@
   box-shadow: 0 0 15px 1px hsl(200, 50%, 75%);
 }
 .tiles{
-  border-radius: 500px; /* acceptable max window size is 3500px by 3000px */
+  border-radius: 500px;
   border: hsl(0, 0%, 25%) 1px solid;
 }
 
@@ -60,4 +60,4 @@
   bottom: 0;
   display: none;
   font-size: 40px;
-}
+} */

@@ -5,8 +5,35 @@
   <link href="page.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/jasmine.css" />
 </head>
-<body>
-<div id="under-game">increase window screen in both dimensions (700px, 800px)</div>
+<body class="m-0 bg-1 ff-1">
+<div id="head" class="w-100 h-45px pos-fixed bg-2 box-shadow-1 z-2">
+  <a href="index.html" target="_blank"><span class="p-3 mf-2 float-left c-1 text-shadow-2 fs-4 pointer">connect4</span></a>
+  <span id="past-games-btn" class="ptb-4 prf-2 mr-2 border-left float-right c-1 text-shadow-1 fs-5 pointer">past games</span>
+  <span id="scores-btn" class="ptb-4 prf-2 border-left float-right fs-5 c-1 text-shadow-1 pointer">see all scores</span>
+  <span id="reset-games-btn" class="ptb-4 prf-2 border-left float-right fs-5 c-1 text-shadow-1 pointer">reset games</span>
+  <span id="add-player-btn" class="ptb-4 prf-2 border-left float-right fs-5 c-1 text-shadow-1 pointer">add player</span>
+  <span id="new-game-btn" class="ptb-4 prf-2 float-right c-1 text-shadow-1 fs-5 pointer">new game</span>
+  <span id="menu-icon-btn" class="ptb-4 prf-2 mr-2 float-right c-1 text-shadow-1 fs-5 pointer display-none">menu icon</span>
+</div>
+<div id="menu" class="w-100 h-100 pos-fixed display-none z-1">
+  <div class="w-300px h-100 pos-fixed r-0 bg-2 z-2"">
+    <p>new game</p>
+    <p>add player</p>
+    <p>reset games</p>
+    <p>see all scores</p>
+    <p id="past-games-btn">past games</p>
+  </div>
+  <div class="w-100 h-100 bg-1-dark"></div>
+</div>
+<div id="games" class="pos-fixed"></div>
+<div id="footer" class="w-100 h-90px pos-fixed b-0 bg-2 box-shadow-2 z-2"></div>
+
+
+
+
+
+<!--
+  <div id="under-game">increase window screen in both dimensions (700px, 800px)</div>
 <div id="game">
   <div id="start-screen">
     <h1 id="game-h1">connect4</h1>
@@ -46,17 +73,17 @@
   <table id="board"></table>
   <p id="game-footer"></p>
 </div>
-<!--
+-->
+
 <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/jasmine.js"></script>
 <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/jasmine-html.js"></script>
 <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/boot0.js"></script>
 <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/boot1.js"></script>
--->
+
 <script src="page.js"></script>
 <script src="connect4.js"></script>
-<!--
+
 <script src="page.test.js"></script>
 <script src="connect4.test.js"></script>
--->
 </body>
 </html>
