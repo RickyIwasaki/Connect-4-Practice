@@ -14,10 +14,10 @@
     height: 100%;
 }
 .h-45px{
-    height: 45px
+    height: 45px;
 }
 .h-90px{
-    height: 90px
+    height: 90px;
 }
 .p-0{
     padding: 0;
@@ -25,25 +25,40 @@
 .p-3{
     padding: 7.5px;
 }
+.p-4{
+    padding: 10px;
+}
 .ptb-4{
     padding-top: 15px;
     padding-bottom: 15px;
 }
-.prf-2{
+.prl-2{
     padding-right: 5px;
     padding-left: 5px;
+}
+.pt-45px{
+    padding-top: 45px;
 }
 .m-0{
     margin: 0;
 }
-.mf-2{
+.ml-2{
     margin-left: 5px;
 }
 .mr-2{
     margin-right: 5px;
 }
+.mt-5{
+    margin-top: 45px;
+}
+.border-top{
+    border-top: solid 1px;
+}
 .border-left{
     border-left: solid 1px;
+}
+.border-bottom{
+    border-bottom: solid 1px;
 }
 
 /* positions */
@@ -83,10 +98,10 @@
     color: hsl(168, 5%, 70%);
 }
 .box-shadow-1{
-    box-shadow: hsl(168, 88%, 26%) 0 0 20px 10px;
+    box-shadow: hsl(168, 88%, 26%) 0 0 40px 5px;
 }
 .box-shadow-2{
-    box-shadow: hsl(168, 88%, 26%) 0 0 20px 20px;
+    box-shadow: hsl(168, 88%, 26%) 0 0 40px 20px;
 }
 
 /* fonts */
@@ -112,6 +127,9 @@
 }
 .z-2{
     z-index: 2;
+}
+.opacity-6{
+    opacity: 0.6;
 }
 .pointer{
     cursor: pointer;

@@ -1,3 +1,19 @@
+// window resize
+const minimizeHead = () => {
+    const head = document.querySelector('#head');
+    for(let i = 1; i < head.children.length - 1; i++){
+        head.children[i].classList.add('display-none');
+    }
+    head.children[head.children.length - 1].classList.remove('display-none');
+}
+const maximizeHead = () => {
+    const head = document.querySelector('#head');
+    for(let i = 1; i < head.children.length - 1; i++){
+        head.children[i].classList.remove('display-none');
+    }
+    head.children[head.children.length - 1].classList.add('display-none');
+}
+
 let headMinimized = false;
 const resize = () => {
     //head-tags
@@ -14,50 +30,79 @@ const resize = () => {
         }
     }
 }
-
-const minimizeHead = () => {
-    const head = document.querySelector('#head');
-    for(let i = 1; i < head.children.length - 1; i++){
-        head.children[i].classList.add('display-none');
-    }
-    head.children[head.children.length - 1].classList.remove('display-none');
-}
-const maximizeHead = () => {
-    const head = document.querySelector('#head');
-    for(let i = 1; i < head.children.length - 1; i++){
-        head.children[i].classList.remove('display-none');
-    }
-    head.children[head.children.length - 1].classList.add('display-none');
-}
-
-
-
-resize();
-
-window.addEventListener('load', () => {
-    
-});
 window.addEventListener('resize', () => {
     resize();
 });
 
-let menuMinimized = false;
-const menuBtn = document.querySelector('#menu-icon-btn');
-menuBtn.addEventListener('click', () => {
+
+// menu stuff
+let menuMinimized = true;
+const closeMenu = () => {
     const menu = document.querySelector('#menu');
     if(menuMinimized){
         menuMinimized = false;
-        menu.classList.add('display-none');
+        menu.classList.remove('display-none');
     }
     else{
         menuMinimized = true;
-        menu.classList.remove('display-none');
+        menu.classList.add('display-none');
     }
+};
+const menuBtn = document.querySelector('#menu-icon-btn');
+menuBtn.addEventListener('click', closeMenu);
+const menuCover = document.querySelector('#menu-cover');
+menuCover.addEventListener('click', closeMenu);
+
+const menuTagsVals = {hovering: [], per: [], interval: []};
+const menuTags = document.querySelector('#menu-tags');
+const menuTagIncrease = (i) => {
+    if(menuTagsVals.hovering[i] && menuTagsVals.per[i] < 100){
+        menuTagsVals.interval[i] = setInterval(() => {
+            menuTagsVals.per[i]++;
+            menuTags.children[i].style.backgroundImage = `linear-gradient(to right, hsl(4, 100%, 46%), hsl(217, 18%, 18%) ${menuTagsVals.per[i]}%)`;
+
+            if(menuTagsVals.per[i] >= 100){
+                clearInterval(menuTagsVals.interval[i]);
+            }
+        }, 3);
+    }
+};
+const menuTagDecrease = (i) => {
+    if(!menuTagsVals.hovering[i] && menuTagsVals.per[i] > 0){
+        menuTagsVals.interval[i] = setInterval(() => {
+            menuTagsVals.per[i]--;
+            menuTags.children[i].style.backgroundImage = `linear-gradient(to right, hsl(4, 100%, 46%), hsl(217, 18%, 18%) ${menuTagsVals.per[i]}%)`;
+
+            if(menuTagsVals.per[i] <= 0){
+                clearInterval(menuTagsVals.interval[i]);
+            }
+        }, 3);
+    }
+};
+for(let i = 0; i < menuTags.children.length; i++){
+    menuTagsVals.hovering[i] = false;
+    menuTagsVals.per[i] = 0;
+
+    menuTags.children[i].addEventListener('mouseover', () => {
+        clearInterval(menuTagsVals.interval[i]);
+        menuTagsVals.hovering[i] = true;
+        menuTagIncrease(i);
+    });
+    menuTags.children[i].addEventListener('mouseout', () => {
+        clearInterval(menuTagsVals.interval[i]);
+        menuTagsVals.hovering[i] = false;
+        menuTagDecrease(i);
+    });
+}
+
+
+
+
+
+resize();
+window.addEventListener('load', () => {
+    
 });
-
-
-
-
 
 
 // const resizeGame = () => {

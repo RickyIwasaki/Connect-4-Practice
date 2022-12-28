@@ -1,4 +1,17 @@
-
+class NodeList{
+    constructor(game, prev, next){
+        this.game = game;
+        this.prev = prev;
+        this.next = next;
+    }
+}
+class Game{
+    constructor(p1, p2){
+        this.p1 = p1;
+        this.p2 = p2;
+    }
+    
+}
 
 
 
