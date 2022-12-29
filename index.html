@@ -15,7 +15,7 @@
   <span id="new-game-btn" class="ptb-4 prl-2 float-right c-1 text-shadow-1 fs-5 pointer">new game</span>
   <span id="menu-icon-btn" class="ptb-4 prl-2 mr-2 float-right c-1 text-shadow-1 fs-5 pointer display-none">menu icon</span>
 </div>
-<div id="menu" class="w-100 h-100 pos-fixed display-none z-1">
+<div id="menu" class="w-100 h-100 pos-fixed z-1 display-none">
   <div id="menu-tags" class="w-300px h-100 pos-fixed r-0 bg-2 z-2">
     <p id="new-game-btn" class="p-4 m-0 mt-5 border-bottom c-1 text-shadow-1 pointer">new game</p>
     <p id="add-player-btn" class="p-4 m-0 border-bottom c-1 text-shadow-1 pointer">add player</p>
@@ -25,8 +25,52 @@
   </div>
   <div id="menu-cover" class="w-100 h-100 bg-1-dark opacity-6"></div>
 </div>
-<div id="games" class="w-100 h-100 pt-45px pos-fixed">asdfasdf</div>
+<form id="player-form" class="pos-fixed round-20px box-shadow-3 text-center bg-2 c-1 z-2 display-none">
+  <p class="text-shadow-2 fs-4">new player</p>
+  <label for="new-name" class="text-shadow-1 fs-5">name ======== { </label>
+  <input type="text" id="new-name" class="w-200px ptb-1 prl-1 mtb-3 border-0 round-3px bg-1 c-2 box-shadow-4"> }
+  <br>
+  <label for="new-color" class="text-shadow-1 fs-5">player color = { </label>
+  <input type="color" id="new-color" class="w-206px h-18px prl-1 mtb-3 border-0 round-3px box-shadow-4"> }
+  <br>
+  <button class="p-2 mtb-3 border-0 round-3px bg-1 c-2 box-shadow-4 fs-5">enter player</button>
+  <br>
+  <p class="text-shadow-1 fs-5">used colors</p>
+  <div id="color-list"></div>
+</form>
+<!-- add more stuff -->
+<form id="game-form" class="pos-fixed round-20px box-shadow-3 text-center bg-2 c-1 z-2 display-none">
+  <p class="text-shadow-2 fs-4">new game</p>
+  <p class="text-shadow-1 fs-5">select player</p>
+  <select id="game-form-p1"></select>
+  <select id="game-form-p2"></select>
+  <span></span>
+  <span></span>
+  <br>
+  <div>
+    <div></div>
+    <div></div>
+  </div>
+  <button class="p-2 mtb-3 border-0 round-3px bg-1 c-2 box-shadow-4 fs-5">new game</button>
+</form>
+<div id="form-cover" class="w-100 h-100 pos-fixed bg-1-dark opacity-6 z-1 display-none"></div>
+<div id="games" class="w-100 h-100 pt-45px pos-sticky">
+  <div class="w-100 h-90px float-right"></div>
+</div>
 <div id="footer" class="w-100 h-90px pos-fixed b-0 bg-2 box-shadow-2 z-2"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -74,6 +118,8 @@
   <p id="game-footer"></p>
 </div>
 -->
+
+
 
 <!-- <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/jasmine.js"></script>
 <script src="https://unpkg.com/jasmine-core@4.1.0/lib/jasmine-core/jasmine-html.js"></script>

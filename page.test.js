@@ -51,6 +51,27 @@ describe('maximizeHead(), when innerWidth is more and headMinimized is true', ()
         }
     });
 });
+describe('repositionPlayerForm(), when player form is displayed and resized', () => {
+    it('should reposition player form', () => {
+        const form = document.querySelector('#player-form');
+        form.classList.remove('display-none');
+        repositionPlayerForm();
+        expect(form.style.left).toBe(`${(innerWidth - playerFormWidth) / 2}px`);
+        expect(form.style.top).toBe(`${(innerHeight - playerFormHeight) / 2}px`);
+    });
+
+    afterEach(() => {
+        const form = document.querySelector('#player-form');
+        form.classList.add('display-none');
+    });
+});
+describe('setDimensions(), when loading', () => {
+    it('should set the dimensions for player form', () => {
+        const form = document.querySelector('#player-form');
+        expect(form.style.width).toBe(`${playerFormWidth}px`);
+        expect(form.style.height).toBe(`${playerFormHeight}px`);
+    });
+});
 // assuming minimizeHead() and maximizeHead() works properly
 describe('resize(), when window dimensions changes', () => {
     it('read script file to test', () => {
@@ -73,6 +94,7 @@ describe('resize(), when window dimensions changes', () => {
 });
 
 // menu stuff
+// assuming menuTagIncrease(i) and menuTagDecrease(i) works properly
 describe('closeMenu(), when certain tags are clicked', () => {
     it('should display menu', () => {
         menuMinimized = false;

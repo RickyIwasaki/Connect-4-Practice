@@ -14,9 +14,34 @@ const maximizeHead = () => {
     head.children[head.children.length - 1].classList.add('display-none');
 }
 
+const playerFormWidth = 500;
+const playerFormHeight = 350;
+const repositionPlayerForm = () => {
+    const form = document.querySelector('#player-form');
+    form.style.left = `${(innerWidth - playerFormWidth) / 2}px`;
+    form.style.top = `${(innerHeight - playerFormHeight) / 2}px`;
+};
+
+const gameFormWidth = 500;
+const gameForHeight = 500;
+const repositionGameForm = () => {
+    const form = document.querySelector('#game-form');
+    form.style.left = `${(innerWidth - gameFormWidth) / 2}px`;
+    form.style.top = `${(innerHeight - gameForHeight) / 2}px`;
+};
+
+const setDimensions = () => {
+    const playerForm = document.querySelector('#player-form');
+    playerForm.style.width = `${playerFormWidth}px`;
+    playerForm.style.height = `${playerFormHeight}px`;
+    const gameForm = document.querySelector('#game-form');
+    gameForm.style.width = `${gameFormWidth}px`;
+    gameForm.style.height = `${gameForHeight}px`;
+};
+
 let headMinimized = false;
 const resize = () => {
-    //head-tags
+    // head-tags
     if(innerWidth < 763){
         if(!headMinimized){
             headMinimized = true;
@@ -28,6 +53,16 @@ const resize = () => {
             headMinimized = false;
             maximizeHead();
         }
+    }
+    // player form
+    const playerForm = document.querySelector('#player-form');
+    if(!playerForm.classList.contains('display-none')){
+        repositionPlayerForm();    
+    }
+    // game form
+    const gameForm = document.querySelector('#game-form');
+    if(!gameForm.classList.contains('display-none')){
+        repositionGameForm();
     }
 }
 window.addEventListener('resize', () => {
@@ -97,12 +132,45 @@ for(let i = 0; i < menuTags.children.length; i++){
 
 
 
+// others
+let newStyle = null;
+newStyle = document.createElement('style');
+document.head.appendChild(newStyle);
+newStyle.rel = 'stylesheet';
+const newAnimation = (body) => {
+    newStyle.innerHTML = body;
+}
 
 
+// runs when script is called
 resize();
+setDimensions();
+// runs when doc is finished reading
 window.addEventListener('load', () => {
     
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // const resizeGame = () => {
