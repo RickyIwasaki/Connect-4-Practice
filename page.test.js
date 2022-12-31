@@ -1,146 +1,90 @@
-// window resize
-// using maximizeHead() for testing
-describe('minimizeHead(), when innerWidth is less and headMinimized is false', () => {
-    beforeEach(() => {
-        maximizeHead();
-    });
-
-    it('should display and undisplay head tags', () => {   
-        minimizeHead();
-        const head = document.querySelector('#head');
-        for(let i = 1; i < head.children.length - 1; i++){
-            expect(head.children[i].classList.contains('display-none')).toBe(true);
-        }
-        expect(head.children[head.children.length - 1].classList.contains('display-none')).toBe(false);
-        // won't break on multiple calls
-        minimizeHead();
-    });
-
-    afterEach(() => {
-        if(innerWidth < 763){
-            minimizeHead();
-        }
-        else{
-            maximizeHead();
-        }
+describe("toggleDisp(tag), when tag's certain event listener is called", () => {
+    it("should toggle display of tag correctly", () => {
+        const newDiv = document.createElement("div");
+        toggleDisp(newDiv);
+        expect(newDiv.classList.contains('display-none')).toBe(true);
+        toggleDisp(newDiv);
+        expect(newDiv.classList.contains('display-none')).toBe(false);
     });
 });
-// using minimizeHead() for testing
-describe('maximizeHead(), when innerWidth is more and headMinimized is true', () => {
-    beforeEach(() => {
-        minimizeHead();
-    }); 
 
-    it('should display and undisplay head tags', () => { 
-        maximizeHead();
-        const head = document.querySelector('#head');
-        for(let i = 1; i < head.children.length - 1; i++){
-            expect(head.children[i].classList.contains('display-none')).toBe(false);
+// window
+describe("toggleNavBar(), when window is resized", () => {
+    it("should toggle displays of nav bar correctly", () => {
+        toggleNavBarTags();
+
+        const navBar = document.querySelector('#nav-bar');
+        const menuIconIndex = navBar.children.length - 1;
+        for(let i = 1; i < menuIconIndex; i++){
+            if(innerWidth < 859){
+                expect(navBar.children[i].classList.contains('display-none')).toBe(true);
+            }
+            else{
+                expect(navBar.children[i].classList.contains('display-none')).toBe(false);
+            }
         }
-        expect(head.children[head.children.length - 1].classList.contains('display-none')).toBe(true);
-        // won't break on multiple calls
-        maximizeHead();
-    });
 
-    afterEach(() => {
-        if(innerWidth < 763){
-            minimizeHead();
+        if(innerWidth < 233 || 859 <= innerWidth){
+            expect(navBar.children[menuIconIndex].classList.contains('display-none')).toBe(true);
         }
         else{
-            maximizeHead();
+            expect(navBar.children[menuIconIndex].classList.contains('display-none')).toBe(false);
         }
     });
 });
-describe('repositionPlayerForm(), when player form is displayed and resized', () => {
-    it('should reposition player form', () => {
-        const form = document.querySelector('#player-form');
-        form.classList.remove('display-none');
-        repositionPlayerForm();
-        expect(form.style.left).toBe(`${(innerWidth - playerFormWidth) / 2}px`);
-        expect(form.style.top).toBe(`${(innerHeight - playerFormHeight) / 2}px`);
-    });
 
-    afterEach(() => {
-        const form = document.querySelector('#player-form');
-        form.classList.add('display-none');
-    });
-});
-describe('setDimensions(), when loading', () => {
-    it('should set the dimensions for player form', () => {
-        const form = document.querySelector('#player-form');
-        expect(form.style.width).toBe(`${playerFormWidth}px`);
-        expect(form.style.height).toBe(`${playerFormHeight}px`);
-    });
-});
-// assuming minimizeHead() and maximizeHead() works properly
-describe('resize(), when window dimensions changes', () => {
-    it('read script file to test', () => {
-        expect(true).toBe(true);
-    });
-    // // resize innerWidth to less than 763px to test
-    // it('should convert headMinimized to true', () => {
-    //     headMinimized = false;
-    //     resize();
-    //     // won't break on multiple calls
-    //     resize();
-    //     expect(headMinimized).toBe(true);
-    // });
-    // // resize innerWidth to other to test
-    // it('should convert headMinimized to false', () => {
-    //     headMinized = true;
-    //     resize();
-    //     expect(headMinimized).toBe(false);
-    // });
-});
+// nav bar // side bar
+describe("changeSideBarTagAnim(), when mouse pass through side bar tag", () => {
+    it("should change background image ratio from num 0 to 100 correctly", (done) => {
+        sideBarTags.forEach((tag, i) => {
+            sideBarTagsAnimPer[i].per = 0;
+            changeSideBarTagAnim(1, i);
+        });
 
-// menu stuff
-// assuming menuTagIncrease(i) and menuTagDecrease(i) works properly
-describe('closeMenu(), when certain tags are clicked', () => {
-    it('should display menu', () => {
-        menuMinimized = false;
-        closeMenu();
-        const menu = document.querySelector('#menu');
-        expect(menu.classList.contains('display-none')).toBe(true);
-    });
-    it('shouldn t display menu', () => {
-        menuMinimized = true;
-        closeMenu();
-        const menu = document.querySelector('#menu');
-        expect(menu.classList.contains('display-none')).toBe(false);
-    });
-
-    afterAll(() => {
-        if(!menuMinimized){
-           closeMenu(); 
-        }
-    });
-});
-describe('menuTagIncrease(i), when hovering over menu tag', () => {
-    // could fail due to lag
-    it('should increase tag s percentage', (done) =>{
-        menuTagsVals.hovering[0] = true;
-        menuTagsVals.per[0] = 0;
-        menuTagIncrease(0);
         setTimeout(() => {
-            expect(menuTagsVals.per[0]).toBe(100);
+            sideBarTags.forEach((tag, i) => {
+                expect(sideBarTagsAnimPer[i].per).toBe(100);
+            });
             done();
-        }, 1000);
+        }, 603);
     });
+    it("should change background image ratio from num 100 to 0 correctly", (done) => {
+        sideBarTags.forEach((tag, i) => {
+            sideBarTagsAnimPer[i].per = 100;
+            changeSideBarTagAnim(-1, i);
+        });
 
-    afterAll(() => {
-        menuTagsVals.hovering[0] = false;
-        menuTagsVals.per[0] = 0;
-    });
-});
-describe('menuTagDecrease(i), when  menu tag', () => {
-    // could fail due to lag
-    it('should decrease tag s percentage', (done) =>{
-        menuTagsVals.hovering[0] = false;
-        menuTagsVals.per[0] = 100;
-        menuTagDecrease(0);
         setTimeout(() => {
-            expect(menuTagsVals.per[0]).toBe(0);
+            sideBarTags.forEach((tag, i) => {
+                expect(sideBarTagsAnimPer[i].per).toBe(0);
+            });
             done();
-        }, 1000);
+        }, 603);
+    });
+    it("should change background image ratio from num (0 < num < 100) to 100 correctly", (done) => {
+        sideBarTags.forEach((tag, i) => {
+            sideBarTagsAnimPer[i].per = 50;
+            changeSideBarTagAnim(1, i);
+        });
+
+        setTimeout(() => {
+            sideBarTags.forEach((tag, i) => {
+                expect(sideBarTagsAnimPer[i].per).toBe(100);
+            });
+            done();
+        }, 303);
+    });
+    it("should change background image ratio from num (0 < num < 100) to 0 correctly", (done) => {
+        sideBarTags.forEach((tag, i) => {
+            sideBarTagsAnimPer[i].per = 50;
+            changeSideBarTagAnim(-1, i);
+        });
+
+        setTimeout(() => {
+            sideBarTags.forEach((tag, i) => {
+                expect(sideBarTagsAnimPer[i].per).toBe(0);
+            });
+            done();
+        }, 303);
     });
 });

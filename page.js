@@ -1,305 +1,223 @@
-// window resize
-const minimizeHead = () => {
-    const head = document.querySelector('#head');
-    for(let i = 1; i < head.children.length - 1; i++){
-        head.children[i].classList.add('display-none');
-    }
-    head.children[head.children.length - 1].classList.remove('display-none');
-}
-const maximizeHead = () => {
-    const head = document.querySelector('#head');
-    for(let i = 1; i < head.children.length - 1; i++){
-        head.children[i].classList.remove('display-none');
-    }
-    head.children[head.children.length - 1].classList.add('display-none');
-}
-
-const playerFormWidth = 500;
-const playerFormHeight = 350;
-const repositionPlayerForm = () => {
-    const form = document.querySelector('#player-form');
-    form.style.left = `${(innerWidth - playerFormWidth) / 2}px`;
-    form.style.top = `${(innerHeight - playerFormHeight) / 2}px`;
-};
-
-const gameFormWidth = 500;
-const gameForHeight = 500;
-const repositionGameForm = () => {
-    const form = document.querySelector('#game-form');
-    form.style.left = `${(innerWidth - gameFormWidth) / 2}px`;
-    form.style.top = `${(innerHeight - gameForHeight) / 2}px`;
-};
-
-const setDimensions = () => {
-    const playerForm = document.querySelector('#player-form');
-    playerForm.style.width = `${playerFormWidth}px`;
-    playerForm.style.height = `${playerFormHeight}px`;
-    const gameForm = document.querySelector('#game-form');
-    gameForm.style.width = `${gameFormWidth}px`;
-    gameForm.style.height = `${gameForHeight}px`;
-};
-
-let headMinimized = false;
-const resize = () => {
-    // head-tags
-    if(innerWidth < 763){
-        if(!headMinimized){
-            headMinimized = true;
-            minimizeHead();
-        }
+const toggleDisp = (tag) => {
+    if(tag.classList.contains('display-none')){
+        tag.classList.remove('display-none');
     }
     else{
-        if(headMinimized){
-            headMinimized = false;
-            maximizeHead();
-        }
-    }
-    // player form
-    const playerForm = document.querySelector('#player-form');
-    if(!playerForm.classList.contains('display-none')){
-        repositionPlayerForm();    
-    }
-    // game form
-    const gameForm = document.querySelector('#game-form');
-    if(!gameForm.classList.contains('display-none')){
-        repositionGameForm();
+        tag.classList.add('display-none');
     }
 }
-window.addEventListener('resize', () => {
-    resize();
+
+
+// window
+const toggleNavBarTags = () => {
+    const navBar = document.querySelector('#nav-bar');
+    const menuIconIndex = navBar.children.length - 1;
+    for(let i = 1; i < menuIconIndex; i++){
+        if(innerWidth < 859){
+            navBar.children[i].classList.add('display-none');
+        }
+        else{
+            navBar.children[i].classList.remove('display-none');
+        }
+    }
+
+    if(innerWidth < 233 || 859 <= innerWidth){
+        navBar.children[menuIconIndex].classList.add('display-none');
+    }
+    else{
+        navBar.children[menuIconIndex].classList.remove('display-none');
+    }
+}
+window.addEventListener('resize', toggleNavBarTags);
+
+
+// nav bar // side bar
+const sideBarIconBtn = document.querySelector('#side-bar-icon-btn');
+const sideBarCover = document.querySelector('#side-bar-cover');
+[sideBarIconBtn, sideBarCover].forEach((tag) => {
+    tag.addEventListener('click', () => {
+        const sideBar = document.querySelector('#side-bar');
+        toggleDisp(sideBar);
+    });
+});
+
+const changeSideBarTagAnim = (action, i) => {
+    clearInterval(sideBarTagsAnimPer[i].interval);
+    sideBarTagsAnimPer[i].interval = setInterval(() => {
+        sideBarTagsAnimPer[i].per += action;
+
+        const colors = ['hsl(4, 100%, 46%)', 'hsl(217, 18%, 18%)'];
+        const bgImage = `linear-gradient(to right, ${colors[0]}, ${colors[1]} ${sideBarTagsAnimPer[i].per}%)`;
+        sideBarTags[i].style.backgroundImage = bgImage;
+
+        if(sideBarTagsAnimPer[i].per <= 0 || 100 <= sideBarTagsAnimPer[i].per){
+            sideBarTagsAnimPer[i].per = 50 + 50 * action;
+            clearInterval(sideBarTagsAnimPer[i].interval);
+        }
+    }, 3);
+};
+const sideBarTagsAnimPer = [];
+const sideBarTags = document.querySelectorAll('#side-bar-tags p');
+sideBarTags.forEach((tag, i) => {
+    sideBarTagsAnimPer[i] = {per: 0, interval: null};
+
+    tag.addEventListener('mouseenter', () => {
+        changeSideBarTagAnim(1, i);
+    });
+    tag.addEventListener('mouseout', () => {
+        changeSideBarTagAnim(-1, i);
+    });
+});
+
+const formCover = document.querySelector('#form-cover');
+
+const addGameBtn = document.querySelectorAll('#add-game-btn');
+addGameBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        if(players.length >= 2){
+            const gameForm = document.querySelector('#game-form');
+            toggleDisp(gameForm);
+        }
+    });
+});
+
+const addPlayerBtn = document.querySelectorAll('#add-player-btn');
+addPlayerBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        const playerForm = document.querySelector('#player-form');
+        const placeholderName = `player ${players.length + 1}`;
+        playerForm.querySelector('#input-name').placeholder = placeholderName;
+        toggleDisp(playerForm);
+        toggleDisp(formCover);
+    });
 });
 
 
-// menu stuff
-let menuMinimized = true;
-const closeMenu = () => {
-    const menu = document.querySelector('#menu');
-    if(menuMinimized){
-        menuMinimized = false;
-        menu.classList.remove('display-none');
+// form section
+formCover.addEventListener('click', () => {
+    toggleDisp(formCover);
+
+    const forms = document.querySelector('#forms');
+    for(let i  = 0; i < forms.children.length; i++){
+        forms.children[i].classList.add('display-none');
+    }
+});
+
+const gameFormSubmitBtn = document.querySelector('#game-form button');
+gameFormSubmitBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    if(players.length >= 2){
+        const selectNumPlayers = document.querySelector('#game-form-num-players');
+        const numPlayers = selectNumPlayers.value;
+        for(let i = 0; i < numPlayers; i++){
+            const selectPlayers = document.querySelector('#game-form-select-players');
+            const newSelect = document.createElement('select');
+            // do this
+            // add num players of select, for each select have players.length of options
+            // add selected players to new Game();
+        }
     }
     else{
-        menuMinimized = true;
-        menu.classList.add('display-none');
+        alert('please add players');
     }
-};
-const menuBtn = document.querySelector('#menu-icon-btn');
-menuBtn.addEventListener('click', closeMenu);
-const menuCover = document.querySelector('#menu-cover');
-menuCover.addEventListener('click', closeMenu);
+});
 
-const menuTagsVals = {hovering: [], per: [], interval: []};
-const menuTags = document.querySelector('#menu-tags');
-const menuTagIncrease = (i) => {
-    if(menuTagsVals.hovering[i] && menuTagsVals.per[i] < 100){
-        menuTagsVals.interval[i] = setInterval(() => {
-            menuTagsVals.per[i]++;
-            menuTags.children[i].style.backgroundImage = `linear-gradient(to right, hsl(4, 100%, 46%), hsl(217, 18%, 18%) ${menuTagsVals.per[i]}%)`;
+const addPlayer = (name, color) => {
+    const newPlayer = {name, color, score: 0};
+    players.push(newPlayer);
 
-            if(menuTagsVals.per[i] >= 100){
-                clearInterval(menuTagsVals.interval[i]);
-            }
-        }, 3);
+    const footer = document.querySelector('#footer');
+    const newFooterDiv = document.createElement('div');
+    footer.appendChild(newFooterDiv);
+
+    newFooterDiv.classList.add('h-100');
+    newFooterDiv.classList.add('pt-15px');
+    newFooterDiv.style.backgroundColor = color;
+
+    for(let i = 0; i < 2; i ++){
+        const newP = document.createElement('p');
+        newFooterDiv.appendChild(newP); 
+        newP.classList.add('mt-10px');
+        newP.classList.add('mr-30px');
+        newP.classList.add('ml-30px');
+        newP.classList.add('text-shadow-5px');
     }
-};
-const menuTagDecrease = (i) => {
-    if(!menuTagsVals.hovering[i] && menuTagsVals.per[i] > 0){
-        menuTagsVals.interval[i] = setInterval(() => {
-            menuTagsVals.per[i]--;
-            menuTags.children[i].style.backgroundImage = `linear-gradient(to right, hsl(4, 100%, 46%), hsl(217, 18%, 18%) ${menuTagsVals.per[i]}%)`;
-
-            if(menuTagsVals.per[i] <= 0){
-                clearInterval(menuTagsVals.interval[i]);
-            }
-        }, 3);
-    }
-};
-for(let i = 0; i < menuTags.children.length; i++){
-    menuTagsVals.hovering[i] = false;
-    menuTagsVals.per[i] = 0;
-
-    menuTags.children[i].addEventListener('mouseover', () => {
-        clearInterval(menuTagsVals.interval[i]);
-        menuTagsVals.hovering[i] = true;
-        menuTagIncrease(i);
-    });
-    menuTags.children[i].addEventListener('mouseout', () => {
-        clearInterval(menuTagsVals.interval[i]);
-        menuTagsVals.hovering[i] = false;
-        menuTagDecrease(i);
-    });
+    newFooterDiv.children[0].textContent = name;
+    newFooterDiv.children[1].textContent = 0;
 }
-
-
-
-// others
-let newStyle = null;
-newStyle = document.createElement('style');
-document.head.appendChild(newStyle);
-newStyle.rel = 'stylesheet';
-const newAnimation = (body) => {
-    newStyle.innerHTML = body;
-}
-
-
-// runs when script is called
-resize();
-setDimensions();
-// runs when doc is finished reading
-window.addEventListener('load', () => {
+const addColorToPlayerForm = (color) => {
+    const colorList = document.querySelector('#color-list');
+    const newFormDiv = document.createElement('div');
+    colorList.appendChild(newFormDiv);
     
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const resizeGame = () => {
-//     if(innerWidth < 700 || innerHeight < 800){
-//         closeGame();
-//     }
-//     else{    
-//         setGameD();
-//     }
-// };
-
-// let isFading = false;
-// //hidden <= display:none;
-// //couldn't think of better name
-// let isHidden = false;
-// const closeGame = () => {
-//     if(!isHidden && !isFading){
-//         isFading = true;
-//         fadeGame();
-//     }
-// };
-
-// const fadeGame = () => {
-//     let opacity = 1;
-
-//     const fadeAway = setInterval(() => {
-//         opacity -= 0.1;
+    newFormDiv.classList.add('w-90px');
+    newFormDiv.classList.add('h-90px');
+    newFormDiv.classList.add('mb-20px');
+    newFormDiv.style.backgroundColor = color;
+}
+const addPlayerToGameForm = () => {
+    const inputNumPlayers = document.querySelector('#game-form-num-players');
+    const newOption = document.createElement('option');
+    newOption.value = players.length;
+    newOption.textContent = players.length;
+    inputNumPlayers.appendChild(newOption);
+}
+const playerFormSubmitBtn = document.querySelector('#player-form button');
+playerFormSubmitBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    const inputName = document.querySelector('#input-name');
+    const inputColor = document.querySelector('#input-color');
+    if(!inputName.value){
+        inputName.value = `player ${players.length + 1}`;
+    }
+    const isPlayerNew = players.every((player) => (
+        player.name !== inputName.value && 
+        player.color !== inputColor.value
+    ));
+    if(isPlayerNew){
+        addPlayer(inputName.value, inputColor.value);
+        inputName.value = '';
         
-//         if(opacity <= 0){
-//             isHidden = true;
-//             isFading = false;
+        addColorToPlayerForm(inputColor.value);
+        if(players.length !== 1){
+            addPlayerToGameForm();
+        }
 
-//             const game = document.querySelector('#game');
-//             const underGame = document.querySelector('#under-game');
-
-//             game.style.display = 'none';
-//             underGame.style.display = 'block';
-            
-//             clearInterval(fadeAway);
-//         }
-//         else{
-//             const game = document.querySelector('#game');
-//             game.style.opacity = opacity;
-//         }
-//     }, 50);
-// };
-
-// const setGameD = () => {
-//     const underGame = document.querySelector('#under-game');
-//     const game = document.querySelector('#game');
-
-//     underGame.style.display = 'none';
-//     game.style.opacity = 1;
-//     game.style.display = 'block';
-
-//     isHidden = false;
-    
-
-//     const boardTd = document.querySelectorAll('.tiles');
-
-//     const dRatio = 7 / 8;
-//     const windowRatio = innerWidth / innerHeight;
-
-//     if(dRatio < windowRatio){
-//         game.style.width = `${(innerHeight * 7 / 8).toFixed(3)}px`;
-//         game.style.height = `${innerHeight}px`;
-
-//         const tdSize = (innerHeight / 8).toFixed(3) - 5;
-//         for(let td of boardTd){
-//             td.style.width = `${tdSize}px`;
-//             td.style.height = `${tdSize}px`;
-//         }
-//     }
-//     else{
-//         game.style.width = `${innerWidth}px`;
-//         game.style.height = `${(innerWidth * 8 / 7).toFixed(3)}px`;
-
-//         const tdSize = (innerWidth / 7).toFixed(3) - 5;
-//         for(let td of boardTd){
-//             td.style.width = `${tdSize}px`;
-//             td.style.height = `${tdSize}px`;
-//         }
-//     }
-// };
-
-// const startGame = () => {
-//     const startScr = document.querySelector('#start-screen');
-//     const board = document.querySelector('#board');
-//     const gameFooter = document.querySelector('#game-footer');
-
-//     startScr.style.display = 'none';
-//     board.style.display = 'block';
-//     gameFooter.style.display = 'block';
-
-//     playerTurn = Math.floor(Math.random() * 2) + 1;
-
-//     const gameAmt = document.querySelector('num-games');
-//     try{
-//         gameAmt.value;
-//         gameLimit = gameAmt.value;
-//     }
-//     catch(error){
-//         gameLimit = 3;
-//     }
-// };
+        const playerForm = document.querySelector('#player-form');
+        const formCover = document.querySelector('#form-cover');
+        [playerForm, formCover].forEach((tag) => {
+            toggleDisp(tag);
+        });
+    }
+    else{
+        alert('name or color already exists');
+    }
+});
 
 
-// window.addEventListener('resize', resizeGame);
+// game
+let players = [];
 
-// const multiGame = document.querySelector('#multi-game');
-// multiGame.addEventListener('change', () => {
-//     const gameNum = document.querySelector('#game-num');
-//     if(multiGame.checked){
-//         gameNum.style.display = 'block';
-//     }
-//     else{
-//         gameNum.style.display = 'none';
-//     }
-// });
 
-// window.addEventListener('submit', (event) => {
-//     event.preventDefault();
-//     startGame();
-//     resetBoard();
-//     setPlayerColors();
-//     changeTurn();
-// });
+// after script or load
+toggleNavBarTags();
 
+
+
+// // others
+// let newStyle = null;
+// newStyle = document.createElement('style');
+// document.head.appendChild(newStyle);
+// newStyle.rel = 'stylesheet';
+// const newAnimation = (body) => {
+//     newStyle.innerHTML = body;
+// }
+
+
+// // runs when script is called
+// resize();
+// setDimensions();
+// // runs when doc is finished reading
 // window.addEventListener('load', () => {
-//     makeBoard();
-//     resizeGame();
+    
 // });
