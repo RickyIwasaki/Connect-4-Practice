@@ -73,8 +73,8 @@ class Game{
         coin.classList.add('h-50px');
         coin.classList.add('round-50');
         coin.classList.add('pos-relative');
-        coin.style.backgroundColor = this.currPlayer.color;
-        coin.style.boxShadow = `${this.currPlayer.color} 0 0 5px 2px`;
+        coin.style.backgroundColor = players[this.currPlayer].color;
+        coin.style.boxShadow = `${players[this.currPlayer].color} 0 0 5px 2px`;
         newAnimation(`
             @keyframes dropCoin{
                 from {top: ${-(y + 1) * 52}px;}
@@ -94,7 +94,7 @@ class Game{
         const footer = document.querySelector('#footer');
         let currPlayerIndex;
         Array.from(footer.children).some((div, i) => {
-            if(div.firstChild.textContent === this.currPlayer.name){
+            if(div.firstChild.textContent === players[this.currPlayer].name){
                 currPlayerIndex = i;
                 return true;
             }

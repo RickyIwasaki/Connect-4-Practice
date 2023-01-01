@@ -7,6 +7,13 @@ const toggleDisp = (tag) => {
     }
 }
 
+let newStyle = document.createElement('style');
+document.head.appendChild(newStyle);
+newStyle.rel = 'stylesheet';
+const newAnimation = (body) => {
+    newStyle.innerHTML = body;
+}
+
 
 // window
 const toggleNavBarTags = () => {
@@ -71,30 +78,36 @@ sideBarTags.forEach((tag, i) => {
 
 const formCover = document.querySelector('#form-cover');
 
-const addGameBtn = document.querySelectorAll('#add-game-btn');
-addGameBtn.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        if(players.length >= 2){
-            const gameForm = document.querySelector('#game-form');
-            toggleDisp(gameForm);
-
-            const selectNumPlayers = document.querySelector('#game-form-num-players');
-            selectNumPlayers.addEventListener('change', changePlayerSelect(selectNumPlayers.value));
-        }
-        else{
-            alert('please add players')
-        }
-    });
-});
-
 const addPlayerBtn = document.querySelectorAll('#add-player-btn');
 addPlayerBtn.forEach((btn) => {
     btn.addEventListener('click', () => {
         const playerForm = document.querySelector('#player-form');
         const placeholderName = `player ${players.length + 1}`;
         playerForm.querySelector('#input-name').placeholder = placeholderName;
-        toggleDisp(playerForm);
-        toggleDisp(formCover);
+        [playerForm, formCover].forEach((tag) => {
+            toggleDisp(tag);
+        });
+    });
+});
+
+const addGameBtn = document.querySelectorAll('#add-game-btn');
+addGameBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        if(players.length >= 2){
+            const gameForm = document.querySelector('#game-form');
+            [gameForm, formCover].forEach((tag) => {
+                toggleDisp(tag);
+            });
+
+            const selectNumPlayers = document.querySelector('#game-form-num-players');
+            changePlayerSelect(selectNumPlayers.value);
+            selectNumPlayers.addEventListener('change', () => {
+                changePlayerSelect(selectNumPlayers.value);
+            });
+        }
+        else{
+            alert('please add players')
+        }
     });
 });
 
@@ -109,71 +122,28 @@ formCover.addEventListener('click', () => {
     }
 });
 
-let headGame = null;
-const changePlayerSelect = (numPlayers) => {
-    for(let i = 0; i < numPlayers; i++){
-        const selectPlayers = document.querySelector('#game-form-select-players');
-        const newSelect = document.createElement('select');
-        selectPlayers.appendChild(newSelect);
-
-        newSelect.classList.add('p-5px');
-        newSelect.classList.add('border-0');
-        newSelect.classList.add('round-3px');
-        newSelect.classList.add('bg-1');
-        newSelect.classList.add('c-2');
-        newSelect.classList.add('box-shadow');
-        newSelect.classList.add('fs-15px');
-
-        players.forEach((player, i) => {
-            const option = document.createElement('option');
-            option.value = i;
-            option.innerText = player.name;
-            newSelect.appendChild(option);
-            //add style class
-        });
-
-        const gamePlayers = Array.from(selectPlayers.children).reduce((arr, p, j) => {
-            // if(selectPlayers.children[j].select === true){
-                arr[j] = selectPlayers.children[j].value
-            // }
-        }, []);
-
-        let temp = null;
-        if(headGame !== null){
-            temp = headGame;
-        }
-        headGame = new Node(new Game(7, 6, ...gamePlayers), null, temp);
-    }
-}
-const gameFormSubmitBtn = document.querySelector('#game-form button');
-gameFormSubmitBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-    const selectNumPlayers = document.querySelector('#game-form-num-players');
-    const numPlayers = selectNumPlayers.value;
-});
-
+let players = [];
 const addPlayer = (name, color) => {
     const newPlayer = {name, color, score: 0};
     players.push(newPlayer);
 
     const footer = document.querySelector('#footer');
-    const newFooterDiv = document.createElement('div');
-    footer.appendChild(newFooterDiv);
+    const newPlayerSpan = document.createElement('span');
+    footer.appendChild(newPlayerSpan);
 
-    newFooterDiv.classList.add('h-100');
-    newFooterDiv.classList.add('pt-15px');
-    newFooterDiv.style.backgroundColor = color;
+    newPlayerSpan.classList.add('p-17apx');
+    newPlayerSpan.style.backgroundColor = color;
 
     for(let i = 0; i < 2; i ++){
-        const newP = document.createElement('p');
-        newFooterDiv.appendChild(newP); 
-        newP.classList.add('mt-10px');
-        newP.classList.add('mr-30px');
-        newP.classList.add('ml-30px');
-        newP.classList.add('text-shadow-5px');
+        const newSpan = document.createElement('span');
+        newPlayerSpan.appendChild(newSpan); 
+        newSpan.classList.add('text-shadow-5px');
+
+        const newHr = document.createElement('hr');
+        newPlayerSpan.appendChild(newHr);
     }
-    newFooterDiv.children[0].textContent = name;
-    newFooterDiv.children[1].textContent = 0;
+    newPlayerSpan.children[0].textContent = name;
+    newPlayerSpan.children[2].textContent = 0;
 }
 const addColorToPlayerForm = (color) => {
     const colorList = document.querySelector('#color-list');
@@ -224,21 +194,71 @@ playerFormSubmitBtn.addEventListener('click', (event) => {
     }
 });
 
+let headGame = null;
+const changePlayerSelect = (numPlayers) => {
+    const selectPlayers = document.querySelector('#game-form-select-players');
+    selectPlayers.innerHTML = '';
+
+    for(let i = 0; i < numPlayers; i++){
+        const newSelect = document.createElement('select');
+        selectPlayers.appendChild(newSelect);
+
+        newSelect.classList.add('p-5px');
+        newSelect.classList.add('m-5px');
+        newSelect.classList.add('border-0');
+        newSelect.classList.add('round-3px');
+        newSelect.classList.add('bg-1');
+        newSelect.classList.add('c-2');
+        newSelect.classList.add('box-shadow-3');
+        newSelect.classList.add('fs-15px');
+
+        players.forEach((player, j) => {
+            const option = document.createElement('option');
+            option.value = j;
+            option.innerText = player.name;
+            newSelect.appendChild(option);
+            //add style class for options
+        });
+    }
+}
+const gameFormSubmitBtn = document.querySelector('#game-form button');
+gameFormSubmitBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    const selectPlayers = document.querySelector('#game-form-select-players');
+
+    const gamePlayers = Array.from(selectPlayers.children).reduce((arr, p, i) => {
+        arr[i] = +selectPlayers.children[i].value;
+        return arr;
+    }, []);
+
+    let temp = null;
+    if(headGame !== null){
+        temp = headGame;
+    }
+    headGame = new Node(new Game(7, 6, gamePlayers), null, temp);
+
+    const gameForm = document.querySelector('#game-form');
+    const formCover = document.querySelector('#form-cover');
+    [gameForm, formCover].forEach((tag) => {
+        toggleDisp(tag);
+    });
+});
+
 
 // game
 class Node{
-    constructor(GAME, prev, next){
-        this.GAME = GAME;
+    constructor(Game, prev, next){
+        this.Game = Game;
         this.prev = prev;
         this.next = next;
     }
 }
 class Game{
-    constructor(WIDTH, HEIGHT, ...gamePlayers){
+    constructor(WIDTH, HEIGHT, gamePlayers){
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
 
-        this.gamePlayers = [...gamePlayers];
+        this.gamePlayers = gamePlayers;
         this.currPlayer = this.gamePlayers[Math.floor(Math.random() * this.gamePlayers.length)];
 
         this.board = [];
@@ -253,9 +273,8 @@ class Game{
     }
     makeHTMLBoard(){
         const games = document.querySelector('#games');
-        this.table.classList.add('p-2');
-        this.table.classList.add('m-2');
-        this.table.classList.add('float-left');
+        this.table.classList.add('p-5px');
+        this.table.classList.add('m-5px');
         this.table.classList.add('bg-2');
         games.insertBefore(this.table, games.firstChild);
 
@@ -269,9 +288,8 @@ class Game{
             topTr.appendChild(topCell);
             topCell.classList.add('w-50px');
             topCell.classList.add('h-50px');
-            topCell.classList.add('border-1');
-            topCell.classList.add('box-shadow-5');
-            topCell.classList.add('bga-3');
+            topCell.classList.add('border-1px');
+            topCell.classList.add('c-1');
         }
 
         for(let y = 0; y < this.HEIGHT; y++){
@@ -282,14 +300,15 @@ class Game{
                 row.appendChild(cell);
                 cell.classList.add('w-50px');
                 cell.classList.add('h-50px');
-                cell.classList.add('border-1');
+                cell.classList.add('border-1px');
+                cell.classList.add('c-3');
             }
             this.table.appendChild(row);
         }
     }
     findSpotForCol(x){
         for (let y = this.HEIGHT - 1; y >= 0; y--) {
-            if (!this.board[y][x]) {
+            if (this.board[y][x] === undefined) {
               return y;
             }
           }
@@ -301,8 +320,8 @@ class Game{
         coin.classList.add('h-50px');
         coin.classList.add('round-50');
         coin.classList.add('pos-relative');
-        coin.style.backgroundColor = this.currPlayer.color;
-        coin.style.boxShadow = `${this.currPlayer.color} 0 0 5px 2px`;
+        coin.style.backgroundColor = players[this.currPlayer].color;
+        coin.style.boxShadow = `${players[this.currPlayer].color} 0 0 5px 2px`;
         newAnimation(`
             @keyframes dropCoin{
                 from {top: ${-(y + 1) * 52}px;}
@@ -318,18 +337,23 @@ class Game{
         topCell.appendChild(coin);
     }
     endGame(){
-        this.table.parentElement.removeChild(this.table);
+        this.table.children[0].remove();
+
         const footer = document.querySelector('#footer');
         let currPlayerIndex;
         Array.from(footer.children).some((div, i) => {
-            if(div.firstChild.textContent === this.currPlayer.name){
+            if(div.firstChild.textContent === players[this.currPlayer].name){
                 currPlayerIndex = i;
                 return true;
             }
             return false;
         });
         footer.children[currPlayerIndex].lastChild.textContent = ++players[currPlayerIndex].score;
-        alert('game finished');
+    
+        setTimeout(() => {
+            alert('game finished');
+            this.table.parentElement.removeChild(this.table);
+        }, 1000);
     }
     handleTopClick(event){
         const x = +event.target.id;
@@ -386,36 +410,8 @@ class Game{
         }
     }
 }
-class Player{
-    constructor(name, color){
-        this.name = name;
-        this.color = color;
-    }
-}
-
-
-let players = [];
 
 
 // after script or load
 toggleNavBarTags();
 
-
-
-// // others
-// let newStyle = null;
-// newStyle = document.createElement('style');
-// document.head.appendChild(newStyle);
-// newStyle.rel = 'stylesheet';
-// const newAnimation = (body) => {
-//     newStyle.innerHTML = body;
-// }
-
-
-// // runs when script is called
-// resize();
-// setDimensions();
-// // runs when doc is finished reading
-// window.addEventListener('load', () => {
-    
-// });
